@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Sprint } from "lucide-react";
+import { Timer } from "lucide-react";
 import { useState } from "react";
 
 interface SprintDialogProps {
@@ -36,7 +36,7 @@ const SprintDialog = ({ onAddSprint }: SprintDialogProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="gap-2">
-          <Sprint className="h-4 w-4" />
+          <Timer className="h-4 w-4" />
           Add Sprint
         </Button>
       </DialogTrigger>
