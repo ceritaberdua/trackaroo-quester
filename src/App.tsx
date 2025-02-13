@@ -7,6 +7,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import Index from "./pages/Index";
 import Calendar from "./pages/Calendar";
 import Analytics from "./pages/Analytics";
+import KanbanBoard from "./pages/KanbanBoard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,9 @@ const App = () => (
             <Link to="/" className="text-sm font-medium hover:text-primary">
               Tasks
             </Link>
+            <Link to="/kanban" className="text-sm font-medium hover:text-primary">
+              Kanban
+            </Link>
             <Link to="/calendar" className="text-sm font-medium hover:text-primary">
               Calendar
             </Link>
@@ -30,6 +34,7 @@ const App = () => (
         </nav>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/kanban" element={<KanbanBoard />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="*" element={<NotFound />} />
