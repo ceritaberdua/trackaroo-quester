@@ -4,9 +4,10 @@ import TaskCard from "@/components/TaskCard";
 import TaskColumn from "@/components/TaskColumn";
 import AddProjectDialog from "@/components/AddProjectDialog";
 import SprintDialog from "@/components/SprintDialog";
+import TaskDialog from "@/components/TaskDialog";
 import { toast } from "sonner";
 
-const mockTasks = [
+const initialMockTasks = [
   {
     id: 1,
     title: "Optimize experience for mobile web",
@@ -55,13 +56,19 @@ const initialColumns = ["Software Development", "Marketing", "IT", "Design", "Op
 
 const Index = () => {
   const [columns, setColumns] = useState(initialColumns);
+  const [tasks, setTasks] = useState(initialMockTasks);
   const [currentSprint, setCurrentSprint] = useState<{
     name: string;
     startDate: string;
     endDate: string;
   } | null>(null);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
 
   const handleAddProject = (projectName: string) => {
+    if (columns.includes(projectName)) {
+      toast.error("Project already exists!");
+      return;
+    }
     setColumns((prev) => [...prev, projectName]);
     toast.success(`Project "${projectName}" created successfully`);
   };
@@ -72,7 +79,19 @@ const Index = () => {
   };
 
   const handleTaskClick = (taskId: number) => {
-    toast.info("Task details coming soon!");
+    const task = tasks.find((t) => t.id === taskId);
+    if (task) {
+      setSelectedTask(task);
+    }
+  };
+
+  const handleTaskUpdate = (updatedTask: any) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? { ...task, ...updatedTask } : task
+      )
+    );
+    toast.success("Task updated successfully");
   };
 
   return (
@@ -99,7 +118,7 @@ const Index = () => {
       <div className="flex gap-6 overflow-x-auto pb-6">
         {columns.map((column) => (
           <TaskColumn key={column} title={column}>
-            {mockTasks
+            {tasks
               .filter((task) => task.column === column)
               .map((task) => (
                 <TaskCard
@@ -117,6 +136,14 @@ const Index = () => {
           </TaskColumn>
         ))}
       </div>
+      {selectedTask && (
+        <TaskDialog
+          isOpen={!!selectedTask}
+          onClose={() => setSelectedTask(null)}
+          task={selectedTask}
+          onSave={handleTaskUpdate}
+        />
+      )}
     </div>
   );
 };
