@@ -1,6 +1,10 @@
 
+import { useState } from "react";
 import TaskCard from "@/components/TaskCard";
 import TaskColumn from "@/components/TaskColumn";
+import AddProjectDialog from "@/components/AddProjectDialog";
+import SprintDialog from "@/components/SprintDialog";
+import { toast } from "sonner";
 
 const mockTasks = [
   {
@@ -47,13 +51,50 @@ const mockTasks = [
   },
 ];
 
-const columns = ["Software Development", "Marketing", "IT", "Design", "Operations"];
+const initialColumns = ["Software Development", "Marketing", "IT", "Design", "Operations"];
 
 const Index = () => {
+  const [columns, setColumns] = useState(initialColumns);
+  const [currentSprint, setCurrentSprint] = useState<{
+    name: string;
+    startDate: string;
+    endDate: string;
+  } | null>(null);
+
+  const handleAddProject = (projectName: string) => {
+    setColumns((prev) => [...prev, projectName]);
+    toast.success(`Project "${projectName}" created successfully`);
+  };
+
+  const handleAddSprint = (name: string, startDate: string, endDate: string) => {
+    setCurrentSprint({ name, startDate, endDate });
+    toast.success(`Sprint "${name}" created successfully`);
+  };
+
+  const handleTaskClick = (taskId: number) => {
+    toast.info("Task details coming soon!");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Project Tasks</h1>
+      <div className="mb-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">Project Tasks</h1>
+          <div className="flex gap-4">
+            <AddProjectDialog onAddProject={handleAddProject} />
+            <SprintDialog onAddSprint={handleAddSprint} />
+          </div>
+        </div>
+        {currentSprint && (
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <p className="font-medium">
+              Current Sprint: {currentSprint.name}
+              <span className="text-sm text-muted-foreground ml-4">
+                {currentSprint.startDate} - {currentSprint.endDate}
+              </span>
+            </p>
+          </div>
+        )}
       </div>
       <div className="flex gap-6 overflow-x-auto pb-6">
         {columns.map((column) => (
@@ -70,6 +111,7 @@ const Index = () => {
                   dueDate={task.dueDate}
                   priority={task.priority}
                   tags={task.tags}
+                  onClick={() => handleTaskClick(task.id)}
                 />
               ))}
           </TaskColumn>

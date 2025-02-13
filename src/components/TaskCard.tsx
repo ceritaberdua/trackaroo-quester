@@ -2,6 +2,11 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 import { Calendar, Flag } from "lucide-react";
 
@@ -16,6 +21,7 @@ interface TaskCardProps {
   dueDate: string;
   priority: "low" | "medium" | "high";
   tags: string[];
+  onClick?: () => void;
 }
 
 const TaskCard = ({
@@ -26,9 +32,13 @@ const TaskCard = ({
   dueDate,
   priority,
   tags,
+  onClick,
 }: TaskCardProps) => {
   return (
-    <Card className="p-4 transition-all duration-200 hover:shadow-lg cursor-pointer group">
+    <Card 
+      className="p-4 transition-all duration-200 hover:shadow-lg cursor-pointer group"
+      onClick={onClick}
+    >
       <div className="space-y-4">
         <div className="flex items-start justify-between">
           <div>
@@ -46,9 +56,19 @@ const TaskCard = ({
             </Badge>
             <h3 className="font-medium leading-none tracking-tight">{title}</h3>
           </div>
-          <Avatar className="h-8 w-8">
-            <img src={assignee.avatar} alt={assignee.name} />
-          </Avatar>
+          <HoverCard>
+            <HoverCardTrigger>
+              <Avatar className="h-8 w-8">
+                <img src={assignee.avatar} alt={assignee.name} />
+              </Avatar>
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium">{assignee.name}</p>
+                <p className="text-xs text-muted-foreground">Assignee</p>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
         <div className="flex items-center justify-between text-sm text-muted-foreground">
